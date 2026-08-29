@@ -1,62 +1,42 @@
 ✈️ Travel Booking Dashboard
 
-A modern and responsive Travel Booking Dashboard designed to simplify the process of exploring, managing, and booking travel experiences through an intuitive web interface.
-
-🌍 Overview
-
-The Travel Booking Dashboard provides users with a centralized platform to explore travel destinations, view available bookings, and manage travel-related information.
-
-The project focuses on creating a clean, user-friendly dashboard with a responsive design and an engaging travel experience.
+A modern and responsive Travel Booking Dashboard designed to make exploring and managing travel bookings simple and convenient.
 
 ✨ Features
 
-- 🏠 Modern dashboard interface
-- 🔍 Search and explore travel options
-- 🗺️ Destination and travel information
-- 🏨 Booking management
-- 📊 Dashboard overview and statistics
-- 📱 Responsive design for different screen sizes
-- 🎨 Clean and intuitive user interface
-- ⚡ Fast and smooth user experience
+- 🔗 Easy travel booking interface
+- 🌍 Explore travel destinations
+- 🏨 Manage bookings
+- 📊 Simple dashboard overview
+- 📱 Responsive design
+- 🎨 Clean and user-friendly UI
 
 🛠️ Technologies Used
 
-- Frontend: HTML, CSS, JavaScript
-- Framework: React.js
-- Styling: CSS / Tailwind CSS
-- Version Control: Git & GitHub
+- React.js
+- JavaScript
+- HTML & CSS
+- Git & GitHub
 
-📂 Project Structure
+🔗 Live Demo
 
-TravelBookingDashboard/
-│
-├── public/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── assets/
-│   └── App.jsx
-│
-├── package.json
-├── README.md
-└── ...
+"Travel Booking Dashboard" (https://github.com/Mishxl/travel-booking-dashboard)
 
 🚀 Getting Started
 
-1. Clone the repository
+Clone the Repository
 
 git clone https://github.com/Mishxl/travel-booking-dashboard.git
-
-2. Navigate to the project directory
-
 cd travel-booking-dashboard
 
-3. Install dependencies
+Install Dependencies
 
 npm install
 
-4. Start the development server
+Run the Project
 
 npm run dev
 
-The application will be available at the local development URL shown in your terminal.
+📄 License
+
+This project is licensed under the MIT License.
