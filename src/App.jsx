@@ -12,7 +12,8 @@ import AdminDemoView from './components/AdminDemoView';
 import { PACKAGES_DATA } from './data/packagesData';
 import { Sparkles, MapPinOff } from 'lucide-react';
 
-const LOCAL_STORAGE_KEY = 'travelease_bookings';
+const LOCAL_STORAGE_BOOKINGS_KEY = 'travelease_bookings';
+const LOCAL_STORAGE_PACKAGES_KEY = 'travelease_packages';
 
 export default function App() {
   // Navigation State ('home', 'explore', 'bookings', 'admin')
@@ -26,10 +27,35 @@ export default function App() {
   // Selected package for Modal view
   const [selectedPackage, setSelectedPackage] = useState(null);
 
-  // User Bookings State initialized from localStorage
+  // 1. Packages State initialized from localStorage (fallback to PACKAGES_DATA)
+  const [packages, setPackages] = useState(() => {
+    try {
+      const savedPackages = localStorage.getItem(LOCAL_STORAGE_PACKAGES_KEY);
+      if (savedPackages) {
+        const parsed = JSON.parse(savedPackages);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load packages from localStorage:', error);
+    }
+    return PACKAGES_DATA;
+  });
+
+  // Sync packages to localStorage whenever modified
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_PACKAGES_KEY, JSON.stringify(packages));
+    } catch (error) {
+      console.error('Failed to save packages to localStorage:', error);
+    }
+  }, [packages]);
+
+  // 2. User Bookings State initialized from localStorage
   const [userBookings, setUserBookings] = useState(() => {
     try {
-      const savedBookings = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const savedBookings = localStorage.getItem(LOCAL_STORAGE_BOOKINGS_KEY);
       if (savedBookings) {
         return JSON.parse(savedBookings);
       }
@@ -39,52 +65,52 @@ export default function App() {
     return [];
   });
 
-  // Sync userBookings to localStorage whenever it changes
+  // Sync userBookings to localStorage whenever modified
   useEffect(() => {
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userBookings));
+      localStorage.setItem(LOCAL_STORAGE_BOOKINGS_KEY, JSON.stringify(userBookings));
     } catch (error) {
       console.error('Failed to save bookings to localStorage:', error);
     }
   }, [userBookings]);
 
-  // Filter & Sort the Packages
+  // Filter & Sort the Packages dynamically from state
   const filteredPackages = useMemo(() => {
-    let result = [...PACKAGES_DATA];
+    let result = [...packages];
 
-    // 1. Filter by destination dropdown / tag
+    // Filter by destination dropdown / tag
     if (selectedDestination && selectedDestination !== 'All Destinations') {
       result = result.filter(
         (pkg) => pkg.destination.toLowerCase() === selectedDestination.toLowerCase()
       );
     }
 
-    // 2. Filter by search text query
+    // Filter by search text query
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
         (pkg) =>
           pkg.destination.toLowerCase().includes(query) ||
           pkg.title.toLowerCase().includes(query) ||
-          pkg.location.toLowerCase().includes(query) ||
-          pkg.category.toLowerCase().includes(query) ||
-          pkg.description.toLowerCase().includes(query)
+          (pkg.location && pkg.location.toLowerCase().includes(query)) ||
+          (pkg.category && pkg.category.toLowerCase().includes(query)) ||
+          (pkg.description && pkg.description.toLowerCase().includes(query))
       );
     }
 
-    // 3. Sorting
+    // Sorting
     if (sortBy === 'price-low') {
       result.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-high') {
       result.sort((a, b) => b.price - a.price);
     } else if (sortBy === 'duration') {
-      result.sort((a, b) => b.durationDays - a.durationDays);
+      result.sort((a, b) => (b.durationDays || 0) - (a.durationDays || 0));
     } else if (sortBy === 'rating') {
-      result.sort((a, b) => b.rating - a.rating);
+      result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     }
 
     return result;
-  }, [searchQuery, selectedDestination, sortBy]);
+  }, [packages, searchQuery, selectedDestination, sortBy]);
 
   // Reset all filters helper
   const handleResetFilters = () => {
@@ -110,18 +136,34 @@ export default function App() {
     }
   };
 
-  // Handle new booking submitted from modal
+  // --- Booking Handlers ---
   const handleNewBooking = (newBooking) => {
-    setUserBookings((prevBookings) => [newBooking, ...prevBookings]);
+    setUserBookings((prev) => [newBooking, ...prev]);
   };
 
-  // Handle cancelling an existing booking (updates status to 'Cancelled')
-  const handleCancelBooking = (bookingId) => {
-    setUserBookings((prevBookings) =>
-      prevBookings.map((b) =>
-        b.bookingId === bookingId ? { ...b, status: 'Cancelled' } : b
-      )
+  const handleUpdateBookingStatus = (bookingId, newStatus) => {
+    setUserBookings((prev) =>
+      prev.map((b) => (b.bookingId === bookingId ? { ...b, status: newStatus } : b))
     );
+  };
+
+  const handleCancelBooking = (bookingId) => {
+    handleUpdateBookingStatus(bookingId, 'Cancelled');
+  };
+
+  // --- Package CRUD Handlers ---
+  const handleAddPackage = (newPkg) => {
+    setPackages((prev) => [newPkg, ...prev]);
+  };
+
+  const handleUpdatePackage = (updatedPkg) => {
+    setPackages((prev) =>
+      prev.map((p) => (p.id === updatedPkg.id ? updatedPkg : p))
+    );
+  };
+
+  const handleDeletePackage = (pkgId) => {
+    setPackages((prev) => prev.filter((p) => p.id !== pkgId));
   };
 
   return (
@@ -130,7 +172,7 @@ export default function App() {
       {/* Top Navbar */}
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Main Content Area */}
+      {/* Main Content Areas */}
       {activeTab === 'bookings' ? (
         <main className="flex-1">
           <MyBookingsView
@@ -144,7 +186,15 @@ export default function App() {
         </main>
       ) : activeTab === 'admin' ? (
         <main className="flex-1">
-          <AdminDemoView onBackToHome={() => setActiveTab('home')} />
+          <AdminDemoView
+            bookings={userBookings}
+            packages={packages}
+            onUpdateBookingStatus={handleUpdateBookingStatus}
+            onAddPackage={handleAddPackage}
+            onUpdatePackage={handleUpdatePackage}
+            onDeletePackage={handleDeletePackage}
+            onBackToHome={() => setActiveTab('home')}
+          />
         </main>
       ) : (
         <main className="flex-1">
