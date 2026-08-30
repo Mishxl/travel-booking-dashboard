@@ -3,7 +3,7 @@ import AdminSidebar from './admin/AdminSidebar';
 import AdminStats from './admin/AdminStats';
 import AdminBookingsTable from './admin/AdminBookingsTable';
 import AdminPackagesView from './admin/AdminPackagesView';
-import { Menu, X, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowLeft, ShieldCheck } from 'lucide-react';
 
 export default function AdminDemoView({
   bookings = [],
@@ -18,10 +18,10 @@ export default function AdminDemoView({
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-slate-100/60 flex flex-col lg:flex-row">
+    <div className="min-h-[calc(100vh-80px)] bg-slate-100/60 flex flex-col lg:flex-row relative">
       
-      {/* Mobile Sidebar Toggle Header */}
-      <div className="lg:hidden bg-slate-900 text-white p-4 flex items-center justify-between border-b border-slate-800">
+      {/* Mobile Top Header with Menu Toggle */}
+      <div className="lg:hidden bg-slate-900 text-white p-4 flex items-center justify-between border-b border-slate-800 sticky top-20 z-30 shadow-md">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-teal-500 text-slate-950 flex items-center justify-center font-bold">
             <ShieldCheck className="w-4 h-4" />
@@ -29,16 +29,37 @@ export default function AdminDemoView({
           <span className="font-bold text-sm">TravelEase Admin</span>
         </div>
 
-        <button
-          onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-          className="p-2 rounded-lg bg-slate-800 text-slate-200"
-        >
-          {mobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onBackToHome}
+            className="text-xs text-slate-400 hover:text-white px-2 py-1"
+          >
+            Website
+          </button>
+          <button
+            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+            className="p-2 rounded-lg bg-slate-800 text-slate-200 hover:bg-slate-700 focus:outline-none"
+            aria-label="Toggle admin sidebar"
+          >
+            {mobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
-      {/* Admin Sidebar (Desktop & Mobile Drawer) */}
-      <div className={`${mobileSidebarOpen ? 'block' : 'hidden'} lg:block shrink-0`}>
+      {/* Mobile Drawer Backdrop Overlay */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 lg:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
+      {/* Admin Sidebar Container */}
+      <div
+        className={`fixed lg:static top-0 bottom-0 left-0 z-50 lg:z-auto transition-transform duration-300 transform ${
+          mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+      >
         <AdminSidebar
           activeAdminTab={activeAdminTab}
           setActiveAdminTab={(tab) => {
@@ -51,8 +72,8 @@ export default function AdminDemoView({
         />
       </div>
 
-      {/* Main Admin Workspace */}
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto space-y-8 max-w-7xl mx-auto w-full">
+      {/* Main Admin Content Workspace */}
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto space-y-6 max-w-7xl mx-auto w-full">
         
         {/* Top Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
