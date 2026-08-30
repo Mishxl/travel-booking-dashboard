@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import SearchBar from './components/SearchBar';
@@ -10,10 +10,12 @@ import Footer from './components/Footer';
 import MyBookingsView from './components/MyBookingsView';
 import AdminDemoView from './components/AdminDemoView';
 import { PACKAGES_DATA } from './data/packagesData';
-import { Sparkles, MapPinOff, Filter } from 'lucide-react';
+import { Sparkles, MapPinOff } from 'lucide-react';
+
+const LOCAL_STORAGE_KEY = 'travelease_bookings';
 
 export default function App() {
-  // Navigation State
+  // Navigation State ('home', 'explore', 'bookings', 'admin')
   const [activeTab, setActiveTab] = useState('home');
 
   // Search & Filter States
@@ -21,9 +23,30 @@ export default function App() {
   const [selectedDestination, setSelectedDestination] = useState('All Destinations');
   const [sortBy, setSortBy] = useState('featured');
 
-  // Modal & Bookings State
+  // Selected package for Modal view
   const [selectedPackage, setSelectedPackage] = useState(null);
-  const [userBookings, setUserBookings] = useState([]);
+
+  // User Bookings State initialized from localStorage
+  const [userBookings, setUserBookings] = useState(() => {
+    try {
+      const savedBookings = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (savedBookings) {
+        return JSON.parse(savedBookings);
+      }
+    } catch (error) {
+      console.error('Failed to load bookings from localStorage:', error);
+    }
+    return [];
+  });
+
+  // Sync userBookings to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userBookings));
+    } catch (error) {
+      console.error('Failed to save bookings to localStorage:', error);
+    }
+  }, [userBookings]);
 
   // Filter & Sort the Packages
   const filteredPackages = useMemo(() => {
@@ -87,9 +110,18 @@ export default function App() {
     }
   };
 
-  // Handle booking confirmation from modal
-  const handleNewBooking = (bookingData) => {
-    setUserBookings((prev) => [bookingData, ...prev]);
+  // Handle new booking submitted from modal
+  const handleNewBooking = (newBooking) => {
+    setUserBookings((prevBookings) => [newBooking, ...prevBookings]);
+  };
+
+  // Handle cancelling an existing booking (updates status to 'Cancelled')
+  const handleCancelBooking = (bookingId) => {
+    setUserBookings((prevBookings) =>
+      prevBookings.map((b) =>
+        b.bookingId === bookingId ? { ...b, status: 'Cancelled' } : b
+      )
+    );
   };
 
   return (
@@ -98,11 +130,12 @@ export default function App() {
       {/* Top Navbar */}
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Main Content Areas */}
+      {/* Main Content Area */}
       {activeTab === 'bookings' ? (
         <main className="flex-1">
           <MyBookingsView
             bookings={userBookings}
+            onCancelBooking={handleCancelBooking}
             onExploreMore={() => {
               setActiveTab('home');
               handleExploreClick();
