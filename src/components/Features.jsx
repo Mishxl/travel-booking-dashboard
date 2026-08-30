@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, HeartHandshake, Headphones, BadgePercent, Sparkles } from 'lucide-react';
+import { ShieldCheck, HeartHandshake, Headphones, BadgePercent } from 'lucide-react';
 
 export default function Features() {
   const features = [

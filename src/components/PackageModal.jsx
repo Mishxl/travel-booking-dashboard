@@ -27,12 +27,6 @@ export default function PackageModal({ pkg, onClose, onBookNow }) {
     maximumFractionDigits: 0,
   }).format(pkg.price);
 
-  const formattedOriginalPrice = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0,
-  }).format(pkg.originalPrice);
-
   const totalCalculatedAmount = pkg.price * guestCount;
 
   const formattedTotalPrice = new Intl.NumberFormat('en-IN', {
@@ -75,12 +69,12 @@ export default function PackageModal({ pkg, onClose, onBookNow }) {
       numberOfTravelers: guestCount,
       price: pkg.price,
       totalAmount: totalCalculatedAmount,
-      status: 'Pending', // Default status per requirement
+      status: 'Pending', // Default status
       bookingDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
       createdAt: new Date().toISOString(),
       image: pkg.image,
       duration: pkg.duration,
-      location: pkg.location,
+      location: pkg.location || pkg.destination,
       category: pkg.category,
     };
 
@@ -114,6 +108,9 @@ export default function PackageModal({ pkg, onClose, onBookNow }) {
             src={pkg.image}
             alt={pkg.destination}
             className="w-full h-full object-cover"
+            onError={(e) => {
+              e.target.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80';
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/40 to-transparent" />
           
@@ -124,14 +121,14 @@ export default function PackageModal({ pkg, onClose, onBookNow }) {
               </span>
               <span className="flex items-center gap-1 text-xs font-semibold bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full">
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                {pkg.rating} ({pkg.reviewsCount} reviews)
+                {pkg.rating || 4.8} ({pkg.reviewsCount || 40} reviews)
               </span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               {pkg.title}
             </h2>
             <p className="text-sm text-teal-200 flex items-center gap-1 mt-1 font-medium">
-              <MapPin className="w-4 h-4" /> {pkg.location} • <Clock className="w-4 h-4 ml-1" /> {pkg.duration}
+              <MapPin className="w-4 h-4" /> {pkg.location || pkg.destination} • <Clock className="w-4 h-4 ml-1" /> {pkg.duration}
             </p>
           </div>
         </div>
@@ -217,7 +214,7 @@ export default function PackageModal({ pkg, onClose, onBookNow }) {
                   Key Highlights & Sightseeing
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {pkg.highlights.map((item, idx) => (
+                  {(pkg.highlights || ['Guided sightseeing', 'Hotel & breakfast included']).map((item, idx) => (
                     <div key={idx} className="flex items-start gap-2 text-xs font-medium text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                       <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0 mt-0.5" />
                       <span>{item}</span>

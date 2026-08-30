@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Compass, Mail, Phone, MapPin, Send, Heart, CheckCircle } from 'lucide-react';
+import { Compass, Mail, Phone, Send, CheckCircle } from 'lucide-react';
 
 export default function Footer({ onSelectDestination }) {
   const [subscribed, setSubscribed] = useState(false);

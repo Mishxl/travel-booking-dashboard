@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Star, ShieldCheck, MapPin, Compass } from 'lucide-react';
+import { ArrowRight, Star, Compass } from 'lucide-react';
 
 export default function Hero({ onExploreClick }) {
   return (

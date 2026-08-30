@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusCircle, Edit, Trash2, MapPin, Clock, Star, Search, Package, Sparkles } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, MapPin, Clock, Star, Search, Package } from 'lucide-react';
 import PackageFormModal from './PackageFormModal';
 
 export default function AdminPackagesView({ packages = [], onAddPackage, onUpdatePackage, onDeletePackage }) {
@@ -113,6 +113,9 @@ export default function AdminPackagesView({ packages = [], onAddPackage, onUpdat
                   src={pkg.image}
                   alt={pkg.destination}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
                 

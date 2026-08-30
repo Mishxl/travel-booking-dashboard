@@ -1,5 +1,4 @@
 import React from 'react';
-import { MapPin, ArrowRight } from 'lucide-react';
 
 export default function PopularDestinations({ onSelectDestination }) {
   const destinations = [
@@ -74,6 +73,9 @@ export default function PopularDestinations({ onSelectDestination }) {
                   alt={dest.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   loading="lazy"
+                  onError={(e) => {
+                    e.target.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/20 to-transparent" />
                 

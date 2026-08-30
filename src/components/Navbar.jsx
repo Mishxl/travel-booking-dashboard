@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Compass, Menu, X, Globe, User, ShieldCheck } from 'lucide-react';
+import { Compass, Menu, X, Globe } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -64,8 +64,8 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 >
                   {item.name}
                   {item.id === 'admin' && (
-                    <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-800 rounded-full">
-                      Demo
+                    <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-teal-100 text-teal-800 rounded-full">
+                      Portal
                     </span>
                   )}
                 </button>
@@ -112,8 +112,8 @@ export default function Navbar({ activeTab, setActiveTab }) {
             >
               <span>{item.name}</span>
               {item.id === 'admin' && (
-                <span className="px-2 py-0.5 text-xs bg-amber-100 text-amber-800 rounded-full font-medium">
-                  Preview
+                <span className="px-2 py-0.5 text-xs bg-teal-100 text-teal-800 rounded-full font-medium">
+                  Portal
                 </span>
               )}
             </button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Clock, Star, Sparkles, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { Clock, Star, ArrowUpRight, CheckCircle2, MapPin } from 'lucide-react';
 
 export default function PackageCard({ pkg, onSelectPackage }) {
   // Format price in Indian Rupee format (e.g. ₹24,999)
@@ -13,7 +13,7 @@ export default function PackageCard({ pkg, onSelectPackage }) {
     style: 'currency',
     currency: 'INR',
     maximumFractionDigits: 0,
-  }).format(pkg.originalPrice);
+  }).format(pkg.originalPrice || Math.round(pkg.price * 1.3));
 
   return (
     <div className="group bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-xl hover:border-teal-300 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1">
@@ -25,6 +25,9 @@ export default function PackageCard({ pkg, onSelectPackage }) {
           alt={pkg.destination}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
           loading="lazy"
+          onError={(e) => {
+            e.target.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80';
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-black/20" />
 
@@ -43,15 +46,15 @@ export default function PackageCard({ pkg, onSelectPackage }) {
         {/* Rating Badge */}
         <div className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-1 bg-white/95 backdrop-blur-md rounded-full shadow text-xs font-bold text-slate-800">
           <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-          <span>{pkg.rating}</span>
-          <span className="text-slate-400 font-normal">({pkg.reviewsCount})</span>
+          <span>{pkg.rating || 4.8}</span>
+          <span className="text-slate-400 font-normal">({pkg.reviewsCount || 40})</span>
         </div>
 
         {/* Destination Title on Image */}
         <div className="absolute bottom-3.5 left-3.5 right-3.5 text-white">
           <div className="flex items-center gap-1.5 text-xs text-teal-300 font-semibold mb-0.5">
             <MapPin className="w-3.5 h-3.5" />
-            <span>{pkg.location}</span>
+            <span>{pkg.location || pkg.destination}</span>
           </div>
           <h3 className="text-xl font-bold text-white tracking-tight drop-shadow-sm line-clamp-1">
             {pkg.destination}
@@ -84,7 +87,7 @@ export default function PackageCard({ pkg, onSelectPackage }) {
 
           {/* Quick Highlight Points */}
           <div className="space-y-1.5 mb-4">
-            {pkg.highlights.slice(0, 2).map((highlight, index) => (
+            {(pkg.highlights || ['Guided sightseeing', 'Hotel & breakfast']).slice(0, 2).map((highlight, index) => (
               <div key={index} className="flex items-start gap-1.5 text-xs text-slate-600">
                 <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" />
                 <span className="line-clamp-1">{highlight}</span>

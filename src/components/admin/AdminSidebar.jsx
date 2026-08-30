@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, CalendarCheck, Package, ArrowLeft, Compass, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, CalendarCheck, Package, ArrowLeft, ShieldCheck } from 'lucide-react';
 
 export default function AdminSidebar({ activeAdminTab, setActiveAdminTab, onBackToWebsite, bookingsCount, packagesCount }) {
   const menuItems = [

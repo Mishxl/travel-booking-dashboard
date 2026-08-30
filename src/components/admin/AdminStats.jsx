@@ -1,5 +1,5 @@
 import React from 'react';
-import { CalendarCheck, Users, Package, TrendingUp, IndianRupee } from 'lucide-react';
+import { CalendarCheck, Users, Package, TrendingUp } from 'lucide-react';
 
 export default function AdminStats({ bookings = [], packages = [] }) {
   // 1. Total Bookings

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MapPin, Clock, FileText, Compass, Clock3, CheckCircle2, XCircle, User, Phone, Mail, Ban, AlertCircle } from 'lucide-react';
+import { Calendar, MapPin, Clock, FileText, Compass, Clock3, CheckCircle2, XCircle, User, Phone, Ban } from 'lucide-react';
 
 export default function MyBookingsView({ bookings = [], onCancelBooking, onExploreMore }) {
   
@@ -80,6 +80,9 @@ export default function MyBookingsView({ bookings = [], onCancelBooking, onExplo
                       src={b.image}
                       alt={b.destination}
                       className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover shrink-0 shadow-sm"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80';
+                      }}
                     />
                     <div className="space-y-1.5 flex-1">
                       

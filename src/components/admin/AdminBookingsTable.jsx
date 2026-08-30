@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Clock3, CheckCircle2, XCircle, Filter, Calendar, Users, MapPin, Phone, Mail, Ban, Check } from 'lucide-react';
+import { Search, Clock3, CheckCircle2, XCircle, Filter, Ban, Check } from 'lucide-react';
 
 export default function AdminBookingsTable({ bookings = [], onUpdateStatus }) {
   const [filterStatus, setFilterStatus] = useState('ALL');
@@ -83,7 +83,7 @@ export default function AdminBookingsTable({ bookings = [], onUpdateStatus }) {
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-xs min-w-[700px]">
             <thead className="bg-slate-50/80 text-slate-500 font-bold border-b border-slate-100 uppercase tracking-wider">
               <tr>
                 <th className="py-3.5 px-4">Booking ID</th>
@@ -106,14 +106,14 @@ export default function AdminBookingsTable({ bookings = [], onUpdateStatus }) {
                   <tr key={b.bookingId} className="hover:bg-slate-50/80 transition-colors">
                     
                     {/* Booking ID */}
-                    <td className="py-3.5 px-4">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
                       <span className="font-mono font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200/50">
                         {b.bookingId}
                       </span>
                     </td>
 
                     {/* Customer */}
-                    <td className="py-3.5 px-4">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
                       <div className="font-bold text-slate-900">{b.customerName}</div>
                       <div className="text-[11px] text-slate-500 flex flex-col">
                         {b.customerEmail && <span>{b.customerEmail}</span>}
@@ -122,30 +122,30 @@ export default function AdminBookingsTable({ bookings = [], onUpdateStatus }) {
                     </td>
 
                     {/* Package */}
-                    <td className="py-3.5 px-4">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
                       <div className="font-bold text-slate-800">{b.destination}</div>
                       <div className="text-[11px] text-slate-500 truncate max-w-[160px]">{b.packageName || b.title}</div>
                     </td>
 
                     {/* Travel Date */}
-                    <td className="py-3.5 px-4 font-medium text-slate-700">
+                    <td className="py-3.5 px-4 font-medium text-slate-700 whitespace-nowrap">
                       {b.travelDate}
                     </td>
 
                     {/* Travelers */}
-                    <td className="py-3.5 px-4 font-medium text-slate-700">
+                    <td className="py-3.5 px-4 font-medium text-slate-700 whitespace-nowrap">
                       {b.numberOfTravelers} Guests
                     </td>
 
                     {/* Amount */}
-                    <td className="py-3.5 px-4">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
                       <div className={`font-bold ${isCancelled ? 'line-through text-slate-400' : 'text-slate-900'}`}>
                         ₹{Number(b.totalAmount).toLocaleString('en-IN')}
                       </div>
                     </td>
 
                     {/* Status Badge */}
-                    <td className="py-3.5 px-4">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
                       {isPending && (
                         <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full">
                           <Clock3 className="w-3 h-3 text-amber-600" /> Pending
@@ -164,7 +164,7 @@ export default function AdminBookingsTable({ bookings = [], onUpdateStatus }) {
                     </td>
 
                     {/* Action Controls */}
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1.5">
                         {isPending && (
                           <>
